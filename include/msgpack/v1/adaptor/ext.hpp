@@ -13,7 +13,7 @@
 #include "msgpack/v1/adaptor/ext_decl.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 #include <cstring>
-#include <string>
+#include <eastl/string.h>
 #include <cassert>
 
 namespace msgpack {
@@ -67,7 +67,7 @@ public:
         return m_data > x.m_data;
     }
 private:
-    std::vector<char> m_data;
+    eastl::vector<char> m_data;
     friend class ext_ref;
 };
 
@@ -79,7 +79,7 @@ template <>
 struct convert<msgpack::type::ext> {
     msgpack::object const& operator()(msgpack::object const& o, msgpack::type::ext& v) const {
         if(o.type != msgpack::type::EXT) {
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
         }
         v = msgpack::type::ext(o.via.ext.type(), o.via.ext.data(), o.via.ext.size);
         return o;
@@ -145,8 +145,8 @@ public:
         return static_cast<int8_t>(m_ptr[0]);
     }
 
-    std::string str() const {
-        return std::string(m_ptr + 1, m_size);
+    eastl::string str() const {
+        return eastl::string(m_ptr + 1, m_size);
     }
 
     bool operator== (const ext_ref& x) const {
@@ -189,7 +189,7 @@ namespace adaptor {
 template <>
 struct convert<msgpack::type::ext_ref> {
     msgpack::object const& operator()(msgpack::object const& o, msgpack::type::ext_ref& v) const {
-        if(o.type != msgpack::type::EXT) { throw msgpack::type_error(); }
+        if(o.type != msgpack::type::EXT) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         v = msgpack::type::ext_ref(o.via.ext.ptr, o.via.ext.size + 1);
         return o;
     }

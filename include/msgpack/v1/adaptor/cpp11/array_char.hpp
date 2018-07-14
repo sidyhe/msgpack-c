@@ -14,7 +14,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 
-#include <array>
+#include <eastl/array.h>
 #include <cstring>
 
 namespace msgpack {
@@ -26,19 +26,19 @@ MSGPACK_API_VERSION_NAMESPACE(v1) {
 namespace adaptor {
 
 template <std::size_t N>
-struct convert<std::array<char, N>> {
-    msgpack::object const& operator()(msgpack::object const& o, std::array<char, N>& v) const {
+struct convert<eastl::array<char, N>> {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::array<char, N>& v) const {
         switch (o.type) {
         case msgpack::type::BIN:
-            if(o.via.bin.size > N) { throw msgpack::type_error(); }
+            if(o.via.bin.size > N) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
             std::memcpy(v.data(), o.via.bin.ptr, o.via.bin.size);
             break;
         case msgpack::type::STR:
-            if(o.via.str.size > N) { throw msgpack::type_error(); }
+            if(o.via.str.size > N) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
             std::memcpy(v.data(), o.via.str.ptr, N);
             break;
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
             break;
         }
         return o;
@@ -46,16 +46,16 @@ struct convert<std::array<char, N>> {
 };
 
 template <>
-struct convert<std::array<char, 0>> {
-    msgpack::object const& operator()(msgpack::object const& o, std::array<char, 0>&) const {
+struct convert<eastl::array<char, 0>> {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::array<char, 0>&) const {
         return o;
     }
 };
 
 template <std::size_t N>
-struct pack<std::array<char, N>> {
+struct pack<eastl::array<char, N>> {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::array<char, N>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::array<char, N>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_bin(size);
         o.pack_bin_body(v.data(), size);
@@ -65,8 +65,8 @@ struct pack<std::array<char, N>> {
 };
 
 template <std::size_t N>
-struct object<std::array<char, N>> {
-    void operator()(msgpack::object& o, const std::array<char, N>& v) const {
+struct object<eastl::array<char, N>> {
+    void operator()(msgpack::object& o, const eastl::array<char, N>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.type = msgpack::type::BIN;
         o.via.bin.ptr = v.data();
@@ -75,8 +75,8 @@ struct object<std::array<char, N>> {
 };
 
 template <std::size_t N>
-struct object_with_zone<std::array<char, N>> {
-    void operator()(msgpack::object::with_zone& o, const std::array<char, N>& v) const {
+struct object_with_zone<eastl::array<char, N>> {
+    void operator()(msgpack::object::with_zone& o, const eastl::array<char, N>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.type = msgpack::type::BIN;
         char* ptr = static_cast<char*>(o.zone.allocate_align(size, MSGPACK_ZONE_ALIGNOF(char)));

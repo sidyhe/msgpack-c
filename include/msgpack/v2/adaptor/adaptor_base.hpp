@@ -36,7 +36,7 @@ struct object<
     T,
     Enabler,
     typename msgpack::enable_if<
-        !msgpack::is_same<T, std::string>::value &&
+        !msgpack::is_same<T, eastl::string>::value &&
         !msgpack::is_array<T>::value
     >::type>
     : v1::adaptor::object<T, Enabler> {

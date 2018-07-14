@@ -11,28 +11,28 @@
 #define MSGPACK_V1_CHECK_CONTAINER_SIZE_HPP
 
 #include "msgpack/v1/adaptor/check_container_size_decl.hpp"
-#include <stdexcept>
 
 namespace msgpack {
 
 /// @cond
 MSGPACK_API_VERSION_NAMESPACE(v1) {
 /// @endcond
-
+#if 0
 struct container_size_overflow : public std::runtime_error {
-    explicit container_size_overflow(const std::string& msg)
+    explicit container_size_overflow(const eastl::string& msg)
         :std::runtime_error(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     explicit container_size_overflow(const char* msg):
         std::runtime_error(msg) {}
 #endif // !defined(MSGPACK_USE_CPP03)
 };
+#endif
 
 namespace detail {
 
 template <std::size_t N>
 inline void check_container_size(std::size_t size) {
-    if (size > 0xffffffff) throw container_size_overflow("container size overflow");
+    if (size > 0xffffffff) ExRaiseStatus(EMSGPACK_CONTAINER_SIZE_OVERFLOW);
 }
 
 template <>
@@ -41,12 +41,12 @@ inline void check_container_size<4>(std::size_t /*size*/) {
 
 template <std::size_t N>
 inline void check_container_size_for_ext(std::size_t size) {
-    if (size > 0xffffffff) throw container_size_overflow("container size overflow");
+    if (size > 0xffffffff) ExRaiseStatus(EMSGPACK_CONTAINER_SIZE_OVERFLOW);
 }
 
 template <>
 inline void check_container_size_for_ext<4>(std::size_t size) {
-    if (size > 0xfffffffe) throw container_size_overflow("container size overflow");
+    if (size > 0xfffffffe) ExRaiseStatus(EMSGPACK_CONTAINER_SIZE_OVERFLOW);
 }
 
 } // namespace detail

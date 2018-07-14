@@ -12,7 +12,6 @@
 
 #include "msgpack/v1/sbuffer_decl.hpp"
 
-#include <stdexcept>
 #include <cstring>
 
 namespace msgpack {
@@ -30,7 +29,7 @@ public:
         } else {
             m_data = (char*)::malloc(initsz);
             if(!m_data) {
-                throw std::bad_alloc();
+                ExRaiseStatus(EMSGPACK_BAD_ALLOC);
             }
         }
     }
@@ -121,7 +120,7 @@ private:
 
         void* tmp = ::realloc(m_data, nsize);
         if(!tmp) {
-            throw std::bad_alloc();
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
 
         m_data = static_cast<char*>(tmp);

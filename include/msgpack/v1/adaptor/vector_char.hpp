@@ -14,7 +14,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 
-#include <vector>
+#include <eastl/vector.h>
 #include <cstring>
 
 namespace msgpack {
@@ -26,8 +26,8 @@ MSGPACK_API_VERSION_NAMESPACE(v1) {
 namespace adaptor {
 
 template <typename Alloc>
-struct convert<std::vector<char, Alloc> > {
-    msgpack::object const& operator()(msgpack::object const& o, std::vector<char, Alloc>& v) const {
+struct convert<eastl::vector<char, Alloc> > {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::vector<char, Alloc>& v) const {
         switch (o.type) {
         case msgpack::type::BIN:
             v.resize(o.via.bin.size);
@@ -56,7 +56,7 @@ struct convert<std::vector<char, Alloc> > {
             }
             break;
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
             break;
         }
         return o;
@@ -64,9 +64,9 @@ struct convert<std::vector<char, Alloc> > {
 };
 
 template <typename Alloc>
-struct pack<std::vector<char, Alloc> > {
+struct pack<eastl::vector<char, Alloc> > {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::vector<char, Alloc>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::vector<char, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_bin(size);
         if (size != 0) {
@@ -78,8 +78,8 @@ struct pack<std::vector<char, Alloc> > {
 };
 
 template <typename Alloc>
-struct object<std::vector<char, Alloc> > {
-    void operator()(msgpack::object& o, const std::vector<char, Alloc>& v) const {
+struct object<eastl::vector<char, Alloc> > {
+    void operator()(msgpack::object& o, const eastl::vector<char, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.type = msgpack::type::BIN;
         if (size != 0) {
@@ -90,8 +90,8 @@ struct object<std::vector<char, Alloc> > {
 };
 
 template <typename Alloc>
-struct object_with_zone<std::vector<char, Alloc> > {
-    void operator()(msgpack::object::with_zone& o, const std::vector<char, Alloc>& v) const {
+struct object_with_zone<eastl::vector<char, Alloc> > {
+    void operator()(msgpack::object::with_zone& o, const eastl::vector<char, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.type = msgpack::type::BIN;
         o.via.bin.size = size;

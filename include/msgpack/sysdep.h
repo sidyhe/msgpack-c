@@ -44,7 +44,7 @@
 #endif
 
 #ifdef _WIN32
-#   define _msgpack_atomic_counter_header <windows.h>
+//#   define _msgpack_atomic_counter_header <windows.h>
 #   if !defined(WIN32_LEAN_AND_MEAN)
 #       define WIN32_LEAN_AND_MEAN
 #   endif /* WIN32_LEAN_AND_MEAN */

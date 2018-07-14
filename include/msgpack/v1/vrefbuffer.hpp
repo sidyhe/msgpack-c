@@ -12,7 +12,6 @@
 
 #include "msgpack/v1/vrefbuffer_decl.hpp"
 
-#include <stdexcept>
 #include <algorithm>
 
 #if defined(_MSC_VER)
@@ -64,7 +63,7 @@ public:
         iovec* array = static_cast<iovec*>(::malloc(
             sizeof(iovec) * nfirst));
         if(!array) {
-            throw std::bad_alloc();
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
 
         m_tail  = array;
@@ -74,7 +73,7 @@ public:
         chunk* c = static_cast<chunk*>(::malloc(sizeof(chunk) + chunk_size));
         if(!c) {
             ::free(array);
-            throw std::bad_alloc();
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
         inner_buffer* const ib = &m_inner_buffer;
 
@@ -119,7 +118,7 @@ public:
             iovec* nvec = static_cast<iovec*>(::realloc(
                 m_array, sizeof(iovec)*nnext));
             if(!nvec) {
-                throw std::bad_alloc();
+                ExRaiseStatus(EMSGPACK_BAD_ALLOC);
             }
 
             m_array = nvec;
@@ -144,7 +143,7 @@ public:
 
             chunk* c = static_cast<chunk*>(::malloc(sizeof(chunk) + sz));
             if(!c) {
-                throw std::bad_alloc();
+                ExRaiseStatus(EMSGPACK_BAD_ALLOC);
             }
 
             c->next = ib->head;
@@ -185,7 +184,7 @@ public:
 
         chunk* empty = static_cast<chunk*>(::malloc(sizeof(chunk) + sz));
         if(!empty) {
-            throw std::bad_alloc();
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
 
         empty->next = MSGPACK_NULLPTR;
@@ -208,7 +207,7 @@ public:
                 to->m_array, sizeof(iovec)*nnext));
             if(!nvec) {
                 ::free(empty);
-                throw std::bad_alloc();
+                ExRaiseStatus(EMSGPACK_BAD_ALLOC);
             }
 
             to->m_array = nvec;

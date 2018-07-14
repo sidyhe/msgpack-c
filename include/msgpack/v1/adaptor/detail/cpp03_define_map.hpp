@@ -15,7 +15,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/object_fwd.hpp"
 
-#include <map>
+#include <eastl/map.h>
 
 namespace msgpack {
 /// @cond
@@ -33,7 +33,7 @@ struct define_map<> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
     }
     void msgpack_object(msgpack::object* o, msgpack::zone&) const
     {
@@ -59,12 +59,12 @@ struct define_map<A0, A1> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -73,7 +73,7 @@ struct define_map<A0, A1> {
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
@@ -111,12 +111,12 @@ struct define_map<A0, A1, A2, A3> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -125,14 +125,14 @@ struct define_map<A0, A1, A2, A3> {
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
@@ -177,12 +177,12 @@ struct define_map<A0, A1, A2, A3, A4, A5> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -191,21 +191,21 @@ struct define_map<A0, A1, A2, A3, A4, A5> {
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
@@ -257,12 +257,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -271,28 +271,28 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7> {
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
@@ -351,12 +351,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -365,35 +365,35 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9> {
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
@@ -459,12 +459,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -473,42 +473,42 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11> {
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
@@ -581,12 +581,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13> {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -595,49 +595,49 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13> {
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
@@ -717,12 +717,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -731,56 +731,56 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
@@ -867,12 +867,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -881,63 +881,63 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
@@ -1031,12 +1031,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -1045,70 +1045,70 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
             if (it != kvmap.end()) {
                 it->second->convert(a19);
             }
@@ -1209,12 +1209,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -1223,77 +1223,77 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
             if (it != kvmap.end()) {
                 it->second->convert(a19);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
             if (it != kvmap.end()) {
                 it->second->convert(a21);
             }
@@ -1401,12 +1401,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -1415,84 +1415,84 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
             if (it != kvmap.end()) {
                 it->second->convert(a19);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
             if (it != kvmap.end()) {
                 it->second->convert(a21);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
             if (it != kvmap.end()) {
                 it->second->convert(a23);
             }
@@ -1607,12 +1607,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -1621,91 +1621,91 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
             if (it != kvmap.end()) {
                 it->second->convert(a19);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
             if (it != kvmap.end()) {
                 it->second->convert(a21);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
             if (it != kvmap.end()) {
                 it->second->convert(a23);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
             if (it != kvmap.end()) {
                 it->second->convert(a25);
             }
@@ -1827,12 +1827,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -1841,98 +1841,98 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
             if (it != kvmap.end()) {
                 it->second->convert(a19);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
             if (it != kvmap.end()) {
                 it->second->convert(a21);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
             if (it != kvmap.end()) {
                 it->second->convert(a23);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
             if (it != kvmap.end()) {
                 it->second->convert(a25);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a26);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a26);
             if (it != kvmap.end()) {
                 it->second->convert(a27);
             }
@@ -2061,12 +2061,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -2075,105 +2075,105 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
             if (it != kvmap.end()) {
                 it->second->convert(a19);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
             if (it != kvmap.end()) {
                 it->second->convert(a21);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
             if (it != kvmap.end()) {
                 it->second->convert(a23);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
             if (it != kvmap.end()) {
                 it->second->convert(a25);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a26);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a26);
             if (it != kvmap.end()) {
                 it->second->convert(a27);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a28);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a28);
             if (it != kvmap.end()) {
                 it->second->convert(a29);
             }
@@ -2309,12 +2309,12 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.insert(
-                std::map<std::string, msgpack::object const*>::value_type(
-                    std::string(
+                eastl::map<eastl::string, msgpack::object const*>::value_type(
+                    eastl::string(
                         o.via.map.ptr[i].key.via.str.ptr,
                         o.via.map.ptr[i].key.via.str.size),
                     &o.via.map.ptr[i].val
@@ -2323,112 +2323,112 @@ struct define_map<A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A1
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a0);
             if (it != kvmap.end()) {
                 it->second->convert(a1);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a2);
             if (it != kvmap.end()) {
                 it->second->convert(a3);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a4);
             if (it != kvmap.end()) {
                 it->second->convert(a5);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a6);
             if (it != kvmap.end()) {
                 it->second->convert(a7);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a8);
             if (it != kvmap.end()) {
                 it->second->convert(a9);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a10);
             if (it != kvmap.end()) {
                 it->second->convert(a11);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a12);
             if (it != kvmap.end()) {
                 it->second->convert(a13);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a14);
             if (it != kvmap.end()) {
                 it->second->convert(a15);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a16);
             if (it != kvmap.end()) {
                 it->second->convert(a17);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a18);
             if (it != kvmap.end()) {
                 it->second->convert(a19);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a20);
             if (it != kvmap.end()) {
                 it->second->convert(a21);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a22);
             if (it != kvmap.end()) {
                 it->second->convert(a23);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a24);
             if (it != kvmap.end()) {
                 it->second->convert(a25);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a26);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a26);
             if (it != kvmap.end()) {
                 it->second->convert(a27);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a28);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a28);
             if (it != kvmap.end()) {
                 it->second->convert(a29);
             }
         }
         
         {
-            std::map<std::string, msgpack::object const*>::const_iterator it = kvmap.find(a30);
+            eastl::map<eastl::string, msgpack::object const*>::const_iterator it = kvmap.find(a30);
             if (it != kvmap.end()) {
                 it->second->convert(a31);
             }

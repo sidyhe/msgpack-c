@@ -14,7 +14,7 @@
 #include "msgpack/object_fwd.hpp"
 #include "msgpack/adaptor/adaptor_base.hpp"
 
-#include <vector>
+#include <eastl/vector.h>
 
 namespace msgpack {
 
@@ -25,13 +25,13 @@ MSGPACK_API_VERSION_NAMESPACE(v1) {
 namespace adaptor {
 
 template <typename Alloc>
-struct convert<std::vector<bool, Alloc> > {
-    msgpack::object const& operator()(msgpack::object const& o, std::vector<bool, Alloc>& v) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct convert<eastl::vector<bool, Alloc> > {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::vector<bool, Alloc>& v) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         if (o.via.array.size > 0) {
             v.resize(o.via.array.size);
             msgpack::object* p = o.via.array.ptr;
-            for (typename std::vector<bool, Alloc>::iterator it = v.begin(), end = v.end();
+            for (typename eastl::vector<bool, Alloc>::iterator it = v.begin(), end = v.end();
                  it != end;
                  ++it) {
                 *it = p->as<bool>();
@@ -43,12 +43,12 @@ struct convert<std::vector<bool, Alloc> > {
 };
 
 template <typename Alloc>
-struct pack<std::vector<bool, Alloc> > {
+struct pack<eastl::vector<bool, Alloc> > {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::vector<bool, Alloc>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::vector<bool, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_array(size);
-        for(typename std::vector<bool, Alloc>::const_iterator it(v.begin()), it_end(v.end());
+        for(typename eastl::vector<bool, Alloc>::const_iterator it(v.begin()), it_end(v.end());
             it != it_end; ++it) {
             o.pack(static_cast<bool>(*it));
         }
@@ -57,8 +57,8 @@ struct pack<std::vector<bool, Alloc> > {
 };
 
 template <typename Alloc>
-struct object_with_zone<std::vector<bool, Alloc> > {
-    void operator()(msgpack::object::with_zone& o, const std::vector<bool, Alloc>& v) const {
+struct object_with_zone<eastl::vector<bool, Alloc> > {
+    void operator()(msgpack::object::with_zone& o, const eastl::vector<bool, Alloc>& v) const {
         o.type = msgpack::type::ARRAY;
         if(v.empty()) {
             o.via.array.ptr = MSGPACK_NULLPTR;
@@ -69,7 +69,7 @@ struct object_with_zone<std::vector<bool, Alloc> > {
             msgpack::object* const pend = p + size;
             o.via.array.ptr = p;
             o.via.array.size = size;
-            typename std::vector<bool, Alloc>::const_iterator it(v.begin());
+            typename eastl::vector<bool, Alloc>::const_iterator it(v.begin());
             do {
                 *p = msgpack::object(static_cast<bool>(*it), o.zone);
                 ++p;

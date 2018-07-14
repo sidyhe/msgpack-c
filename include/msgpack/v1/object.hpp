@@ -13,12 +13,9 @@
 #include "msgpack/object_decl.hpp"
 
 #include <cstring>
-#include <stdexcept>
 #include <typeinfo>
 #include <limits>
-#include <ostream>
 #include <typeinfo>
-#include <iomanip>
 
 namespace msgpack {
 
@@ -316,7 +313,7 @@ struct pack<msgpack::object> {
             return o;
 
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
         }
     }
 };
@@ -389,7 +386,7 @@ struct object_with_zone<msgpack::object> {
             return;
 
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
         }
 
     }
@@ -762,7 +759,7 @@ inline msgpack::packer<Stream>& operator<< (msgpack::packer<Stream>& o, const ms
         return o;
 
     default:
-        throw msgpack::type_error();
+        ExRaiseStatus(EMSGPACK_TYPE_ERROR);
     }
 }
 
@@ -772,117 +769,7 @@ inline msgpack::packer<Stream>& operator<< (msgpack::packer<Stream>& o, const ms
     return o << static_cast<msgpack::object>(v);
 }
 
-inline std::ostream& operator<< (std::ostream& s, const msgpack::object& o)
-{
-    switch(o.type) {
-    case msgpack::type::NIL:
-        s << "null";
-        break;
 
-    case msgpack::type::BOOLEAN:
-        s << (o.via.boolean ? "true" : "false");
-        break;
-
-    case msgpack::type::POSITIVE_INTEGER:
-        s << o.via.u64;
-        break;
-
-    case msgpack::type::NEGATIVE_INTEGER:
-        s << o.via.i64;
-        break;
-
-    case msgpack::type::FLOAT32:
-    case msgpack::type::FLOAT64:
-        s << o.via.f64;
-        break;
-
-    case msgpack::type::STR:
-        s << '"';
-        for (uint32_t i = 0; i < o.via.str.size; ++i) {
-            char c = o.via.str.ptr[i];
-            switch (c) {
-            case '\\':
-                s << "\\\\";
-                break;
-            case '"':
-                s << "\\\"";
-                break;
-            case '/':
-                s << "\\/";
-                break;
-            case '\b':
-                s << "\\b";
-                break;
-            case '\f':
-                s << "\\f";
-                break;
-            case '\n':
-                s << "\\n";
-                break;
-            case '\r':
-                s << "\\r";
-                break;
-            case '\t':
-                s << "\\t";
-                break;
-            default: {
-                unsigned int code = static_cast<unsigned int>(c);
-                if (code < 0x20 || code == 0x7f) {
-                    std::ios::fmtflags flags(s.flags());
-                    s << "\\u" << std::hex << std::setw(4) << std::setfill('0') << (code & 0xff);
-                    s.flags(flags);
-                }
-                else {
-                    s << c;
-                }
-            } break;
-            }
-        }
-        s << '"';
-        break;
-
-    case msgpack::type::BIN:
-        (s << '"').write(o.via.bin.ptr, o.via.bin.size) << '"';
-        break;
-
-    case msgpack::type::EXT:
-        s << "EXT";
-        break;
-
-    case msgpack::type::ARRAY:
-        s << "[";
-        if(o.via.array.size != 0) {
-            msgpack::object* p(o.via.array.ptr);
-            s << *p;
-            ++p;
-            for(msgpack::object* const pend(o.via.array.ptr + o.via.array.size);
-                    p < pend; ++p) {
-                s << ", " << *p;
-            }
-        }
-        s << "]";
-        break;
-
-    case msgpack::type::MAP:
-        s << "{";
-        if(o.via.map.size != 0) {
-            msgpack::object_kv* p(o.via.map.ptr);
-            s << p->key << ':' << p->val;
-            ++p;
-            for(msgpack::object_kv* const pend(o.via.map.ptr + o.via.map.size);
-                    p < pend; ++p) {
-                s << ", " << p->key << ':' << p->val;
-            }
-        }
-        s << "}";
-        break;
-
-    default:
-        // FIXME
-        s << "#<UNKNOWN " << static_cast<uint16_t>(o.type) << ">";
-    }
-    return s;
-}
 
 /// @cond
 }  // MSGPACK_API_VERSION_NAMESPACE(v1)

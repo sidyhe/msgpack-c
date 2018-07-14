@@ -14,7 +14,7 @@
 #include "msgpack/v1/adaptor/detail/cpp11_convert_helper.hpp"
 
 #include <tuple>
-#include <map>
+#include <eastl/map.h>
 
 namespace msgpack {
 /// @cond
@@ -31,7 +31,7 @@ struct define_map_imp {
     }
     static void unpack(
         msgpack::object const& o, Tuple const& t,
-        std::map<std::string, msgpack::object const*> const& kvmap) {
+        eastl::map<eastl::string, msgpack::object const*> const& kvmap) {
         define_map_imp<Tuple, N-2>::unpack(o, t, kvmap);
         auto it = kvmap.find(std::get<N-2>(t));
         if (it != kvmap.end()) {
@@ -51,7 +51,7 @@ struct define_map_imp<Tuple, 0> {
     static void pack(Packer&, Tuple const&) {}
     static void unpack(
         msgpack::object const&, Tuple const&,
-        std::map<std::string, msgpack::object const*> const&) {}
+        eastl::map<eastl::string, msgpack::object const*> const&) {}
     static void object(msgpack::object*, msgpack::zone&, Tuple const&) {}
 };
 
@@ -69,11 +69,11 @@ struct define_map {
     }
     void msgpack_unpack(msgpack::object const& o) const
     {
-        if(o.type != msgpack::type::MAP) { throw msgpack::type_error(); }
-        std::map<std::string, msgpack::object const*> kvmap;
+        if(o.type != msgpack::type::MAP) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::map<eastl::string, msgpack::object const*> kvmap;
         for (uint32_t i = 0; i < o.via.map.size; ++i) {
             kvmap.emplace(
-                std::string(
+                eastl::string(
                     o.via.map.ptr[i].key.via.str.ptr,
                     o.via.map.ptr[i].key.via.str.size),
                 &o.via.map.ptr[i].val);

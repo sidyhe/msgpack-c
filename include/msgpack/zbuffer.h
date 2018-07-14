@@ -104,7 +104,7 @@ static inline bool msgpack_zbuffer_expand(msgpack_zbuffer* zbuf)
     size_t csize = used + zbuf->stream.avail_out;
     size_t nsize = (csize == 0) ? zbuf->init_size : csize * 2;
 
-    char* tmp = (char*)realloc(zbuf->data, nsize);
+	char* tmp = (char*)realloc(zbuf->data, nsize);
     if(tmp == NULL) {
         return false;
     }

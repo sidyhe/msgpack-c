@@ -16,7 +16,7 @@
 
 #include <cstdlib>
 #include <memory>
-#include <vector>
+#include <eastl/vector.h>
 
 namespace msgpack {
 
@@ -72,7 +72,7 @@ private:
             finalizer* tmp =
                 static_cast<finalizer*>(::realloc(m_array, sizeof(finalizer) * nnext));
             if(!tmp) {
-                throw std::bad_alloc();
+				ExRaiseStatus(EMSGPACK_BAD_ALLOC);
             }
             m_array     = tmp;
             m_end   = tmp + nnext;
@@ -111,7 +111,7 @@ private:
         {
             chunk* c = static_cast<chunk*>(::malloc(sizeof(chunk) + chunk_size));
             if(!c) {
-                throw std::bad_alloc();
+                ExRaiseStatus(EMSGPACK_BAD_ALLOC);
             }
 
             m_head = c;
@@ -187,7 +187,7 @@ public:
     static void* operator new(std::size_t size)
     {
         void* p = ::malloc(size);
-        if (!p) throw std::bad_alloc();
+        if (!p) ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         return p;
     }
     static void operator delete(void *p) noexcept
@@ -279,7 +279,7 @@ inline char* zone::allocate_expand(size_t size)
     }
 
     chunk* c = static_cast<chunk*>(::malloc(sizeof(chunk) + sz));
-    if (!c) throw std::bad_alloc();
+    if (!c) ExRaiseStatus(EMSGPACK_BAD_ALLOC);
 
     char* ptr = reinterpret_cast<char*>(c) + sizeof(chunk);
 

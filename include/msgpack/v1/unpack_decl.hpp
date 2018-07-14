@@ -19,7 +19,6 @@
 #include "msgpack/parse_return.hpp"
 
 #include <memory>
-#include <stdexcept>
 
 #if !defined(MSGPACK_USE_CPP03)
 #include <atomic>

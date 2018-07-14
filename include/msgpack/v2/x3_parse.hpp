@@ -120,7 +120,7 @@ template <typename Visitor>
 struct app_specific {
     template <typename Vis>
     app_specific(Vis&& vis):vis(vis) {}
-    std::vector<index_size> index_sizes;
+    eastl::vector<index_size> index_sizes;
     Visitor vis;
 };
 

@@ -110,12 +110,12 @@ inline void unpack_false(msgpack::object& o)
 
 struct unpack_array {
     void operator()(unpack_user& u, uint32_t n, msgpack::object& o) const {
-        if (n > u.limit().array()) throw msgpack::array_size_overflow("array size overflow");
+        if (n > u.limit().array()) ExRaiseStatus(EMSGPACK_ARRAY_SIZE_OVERFLOW);
         o.type = msgpack::type::ARRAY;
         o.via.array.size = 0;
         size_t size = n*sizeof(msgpack::object);
         if (size / sizeof(msgpack::object) != n) {
-            throw msgpack::array_size_overflow("array size overflow");
+            ExRaiseStatus(EMSGPACK_ARRAY_SIZE_OVERFLOW);
         }
         o.via.array.ptr = static_cast<msgpack::object*>(u.zone().allocate_align(size, MSGPACK_ZONE_ALIGNOF(msgpack::object)));
     }
@@ -132,12 +132,12 @@ inline void unpack_array_item(msgpack::object& c, msgpack::object const& o)
 
 struct unpack_map {
     void operator()(unpack_user& u, uint32_t n, msgpack::object& o) const {
-        if (n > u.limit().map()) throw msgpack::map_size_overflow("map size overflow");
+        if (n > u.limit().map()) ExRaiseStatus(EMSGPACK_MAP_SIZE_OVERFLOW);
         o.type = msgpack::type::MAP;
         o.via.map.size = 0;
         size_t size = n*sizeof(msgpack::object_kv);
         if (size / sizeof(msgpack::object_kv) != n) {
-            throw msgpack::map_size_overflow("map size overflow");
+            ExRaiseStatus(EMSGPACK_MAP_SIZE_OVERFLOW);
         }
         o.via.map.ptr = static_cast<msgpack::object_kv*>(u.zone().allocate_align(size, MSGPACK_ZONE_ALIGNOF(msgpack::object_kv)));
     }
@@ -163,7 +163,7 @@ inline void unpack_str(unpack_user& u, const char* p, uint32_t l, msgpack::objec
         u.set_referenced(true);
     }
     else {
-        if (l > u.limit().str()) throw msgpack::str_size_overflow("str size overflow");
+        if (l > u.limit().str()) ExRaiseStatus(EMSGPACK_STR_SIZE_OVERFLOW);
         char* tmp = static_cast<char*>(u.zone().allocate_align(l, MSGPACK_ZONE_ALIGNOF(char)));
         std::memcpy(tmp, p, l);
         o.via.str.ptr = tmp;
@@ -179,7 +179,7 @@ inline void unpack_bin(unpack_user& u, const char* p, uint32_t l, msgpack::objec
         u.set_referenced(true);
     }
     else {
-        if (l > u.limit().bin()) throw msgpack::bin_size_overflow("bin size overflow");
+        if (l > u.limit().bin()) ExRaiseStatus(EMSGPACK_BIN_SIZE_OVERFLOW);
         char* tmp = static_cast<char*>(u.zone().allocate_align(l, MSGPACK_ZONE_ALIGNOF(char)));
         std::memcpy(tmp, p, l);
         o.via.bin.ptr = tmp;
@@ -195,7 +195,7 @@ inline void unpack_ext(unpack_user& u, const char* p, std::size_t l, msgpack::ob
         u.set_referenced(true);
     }
     else {
-        if (l > u.limit().ext()) throw msgpack::ext_size_overflow("ext size overflow");
+        if (l > u.limit().ext()) ExRaiseStatus(EMSGPACK_EXT_SIZE_OVERFLOW);
         char* tmp = static_cast<char*>(u.zone().allocate_align(l, MSGPACK_ZONE_ALIGNOF(char)));
         std::memcpy(tmp, p, l);
         o.via.ext.ptr = tmp;
@@ -363,7 +363,7 @@ private:
                 m_stack.push_back(unpack_stack());
             }
             else {
-                throw msgpack::depth_size_overflow("depth size overflow");
+                ExRaiseStatus(EMSGPACK_DEPTH_SIZE_OVERFLOW);
             }
             m_cs = MSGPACK_CS_HEADER;
             ++m_current;
@@ -441,12 +441,12 @@ private:
     std::size_t m_trail;
     unpack_user m_user;
     uint32_t m_cs;
-    std::vector<unpack_stack> m_stack;
+    eastl::vector<unpack_stack> m_stack;
 };
 
 template <>
 inline void context::check_ext_size<4>(std::size_t size) {
-    if (size == 0xffffffff) throw msgpack::ext_size_overflow("ext size overflow");
+    if (size == 0xffffffff) ExRaiseStatus(EMSGPACK_EXT_SIZE_OVERFLOW);
 }
 
 inline int context::execute(const char* data, std::size_t len, std::size_t& off)
@@ -1057,7 +1057,7 @@ inline unpacker::unpacker(unpack_reference_func f,
 
     char* buffer = static_cast<char*>(::malloc(initial_buffer_size));
     if(!buffer) {
-        throw std::bad_alloc();
+        ExRaiseStatus(EMSGPACK_BAD_ALLOC);
     }
 
     m_buffer = buffer;
@@ -1134,9 +1134,9 @@ inline void unpacker::expand_buffer(std::size_t size)
             next_size = tmp_next_size;
         }
 
-        char* tmp = static_cast<char*>(::realloc(m_buffer, next_size));
+		char* tmp = static_cast<char*>(::realloc(m_buffer, next_size));
         if(!tmp) {
-            throw std::bad_alloc();
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
 
         m_buffer = tmp;
@@ -1156,7 +1156,7 @@ inline void unpacker::expand_buffer(std::size_t size)
 
         char* tmp = static_cast<char*>(::malloc(next_size));
         if(!tmp) {
-            throw std::bad_alloc();
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
 
         detail::init_count(tmp);
@@ -1164,12 +1164,12 @@ inline void unpacker::expand_buffer(std::size_t size)
         std::memcpy(tmp+COUNTER_SIZE, m_buffer + m_off, not_parsed);
 
         if(m_ctx.user().referenced()) {
-            try {
+            __try {
                 m_z->push_finalizer(&detail::decr_count, m_buffer);
             }
-            catch (...) {
+            __except (EXCEPTION_EXECUTE_HANDLER) {
                 ::free(tmp);
-                throw;
+				ExRaiseStatus(GetExceptionCode());
             }
             m_ctx.user().set_referenced(false);
         } else {
@@ -1204,7 +1204,7 @@ inline bool unpacker::next(msgpack::object_handle& result, bool& referenced)
     referenced = false;
     int ret = execute_imp();
     if(ret < 0) {
-        throw msgpack::parse_error("parse error");
+        ExRaiseStatus(EMSGPACK_PARSE_ERROR);
     }
 
     if(ret == 0) {
@@ -1237,7 +1237,7 @@ inline bool unpacker::execute()
 {
     int ret = execute_imp();
     if(ret < 0) {
-        throw msgpack::parse_error("parse error");
+        ExRaiseStatus(EMSGPACK_PARSE_ERROR);
     } else if(ret == 0) {
         return false;
     } else {
@@ -1282,9 +1282,9 @@ inline void unpacker::reset_zone()
 inline bool unpacker::flush_zone()
 {
     if(m_ctx.user().referenced()) {
-        try {
+        __try {
             m_z->push_finalizer(&detail::decr_count, m_buffer);
-        } catch (...) {
+        } __except (EXCEPTION_EXECUTE_HANDLER) {
             return false;
         }
         m_ctx.user().set_referenced(false);
@@ -1399,10 +1399,10 @@ inline msgpack::object_handle unpack(
     case PARSE_EXTRA_BYTES:
         return msgpack::object_handle(obj, msgpack::move(z));
     case PARSE_CONTINUE:
-        throw msgpack::insufficient_bytes("insufficient bytes");
+        ExRaiseStatus(EMSGPACK_INSUFFICIENT_BYTES);
     case PARSE_PARSE_ERROR:
     default:
-        throw msgpack::parse_error("parse error");
+        ExRaiseStatus(EMSGPACK_PARSE_ERROR);
     }
     return msgpack::object_handle();
 }
@@ -1459,10 +1459,10 @@ inline void unpack(
         result.zone() = msgpack::move(z);
         return;
     case PARSE_CONTINUE:
-        throw msgpack::insufficient_bytes("insufficient bytes");
+        ExRaiseStatus(EMSGPACK_INSUFFICIENT_BYTES);
     case PARSE_PARSE_ERROR:
     default:
-        throw msgpack::parse_error("parse error");
+        ExRaiseStatus(EMSGPACK_PARSE_ERROR);
     }
 }
 
@@ -1517,10 +1517,10 @@ inline msgpack::object unpack(
     case PARSE_EXTRA_BYTES:
         return obj;
     case PARSE_CONTINUE:
-        throw msgpack::insufficient_bytes("insufficient bytes");
+        ExRaiseStatus(EMSGPACK_INSUFFICIENT_BYTES);
     case PARSE_PARSE_ERROR:
     default:
-        throw msgpack::parse_error("parse error");
+        ExRaiseStatus(EMSGPACK_PARSE_ERROR);
     }
     return obj;
 }

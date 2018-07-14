@@ -13,7 +13,6 @@
 #include "msgpack/versioning.hpp"
 
 #include <cstdio>
-#include <stdexcept>
 
 namespace msgpack {
 

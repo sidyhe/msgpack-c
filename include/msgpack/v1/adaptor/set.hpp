@@ -14,7 +14,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 
-#include <set>
+#include <eastl/set.h>
 
 namespace msgpack {
 
@@ -27,12 +27,12 @@ namespace adaptor {
 #if !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Compare, typename Alloc>
-struct as<std::set<T, Compare, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
-    std::set<T, Compare, Alloc> operator()(msgpack::object const& o) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct as<eastl::set<T, Compare, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
+    eastl::set<T, Compare, Alloc> operator()(msgpack::object const& o) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         msgpack::object* p = o.via.array.ptr + o.via.array.size;
         msgpack::object* const pbegin = o.via.array.ptr;
-        std::set<T, Compare, Alloc> v;
+        eastl::set<T, Compare, Alloc> v;
         while (p > pbegin) {
             --p;
             v.insert(p->as<T>());
@@ -44,12 +44,12 @@ struct as<std::set<T, Compare, Alloc>, typename std::enable_if<msgpack::has_as<T
 #endif // !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Compare, typename Alloc>
-struct convert<std::set<T, Compare, Alloc> > {
-    msgpack::object const& operator()(msgpack::object const& o, std::set<T, Compare, Alloc>& v) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct convert<eastl::set<T, Compare, Alloc> > {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::set<T, Compare, Alloc>& v) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         msgpack::object* p = o.via.array.ptr + o.via.array.size;
         msgpack::object* const pbegin = o.via.array.ptr;
-        std::set<T, Compare, Alloc> tmp;
+        eastl::set<T, Compare, Alloc> tmp;
         while (p > pbegin) {
             --p;
             tmp.insert(p->as<T>());
@@ -64,12 +64,12 @@ struct convert<std::set<T, Compare, Alloc> > {
 };
 
 template <typename T, typename Compare, typename Alloc>
-struct pack<std::set<T, Compare, Alloc> > {
+struct pack<eastl::set<T, Compare, Alloc> > {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::set<T, Compare, Alloc>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::set<T, Compare, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_array(size);
-        for (typename std::set<T, Compare, Alloc>::const_iterator it(v.begin()), it_end(v.end());
+        for (typename eastl::set<T, Compare, Alloc>::const_iterator it(v.begin()), it_end(v.end());
             it != it_end; ++it) {
             o.pack(*it);
         }
@@ -78,8 +78,8 @@ struct pack<std::set<T, Compare, Alloc> > {
 };
 
 template <typename T, typename Compare, typename Alloc>
-struct object_with_zone<std::set<T, Compare, Alloc> > {
-    void operator()(msgpack::object::with_zone& o, const std::set<T, Compare, Alloc>& v) const {
+struct object_with_zone<eastl::set<T, Compare, Alloc> > {
+    void operator()(msgpack::object::with_zone& o, const eastl::set<T, Compare, Alloc>& v) const {
         o.type = msgpack::type::ARRAY;
         if (v.empty()) {
             o.via.array.ptr = MSGPACK_NULLPTR;
@@ -91,7 +91,7 @@ struct object_with_zone<std::set<T, Compare, Alloc> > {
             msgpack::object* const pend = p + size;
             o.via.array.ptr = p;
             o.via.array.size = size;
-            typename std::set<T, Compare, Alloc>::const_iterator it(v.begin());
+            typename eastl::set<T, Compare, Alloc>::const_iterator it(v.begin());
             do {
                 *p = msgpack::object(*it, o.zone);
                 ++p;
@@ -104,12 +104,12 @@ struct object_with_zone<std::set<T, Compare, Alloc> > {
 #if !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Compare, typename Alloc>
-struct as<std::multiset<T, Compare, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
-    std::multiset<T, Compare, Alloc> operator()(msgpack::object const& o) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct as<eastl::multiset<T, Compare, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
+    eastl::multiset<T, Compare, Alloc> operator()(msgpack::object const& o) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         msgpack::object* p = o.via.array.ptr + o.via.array.size;
         msgpack::object* const pbegin = o.via.array.ptr;
-        std::multiset<T, Compare, Alloc> v;
+        eastl::multiset<T, Compare, Alloc> v;
         while (p > pbegin) {
             --p;
             v.insert(p->as<T>());
@@ -121,12 +121,12 @@ struct as<std::multiset<T, Compare, Alloc>, typename std::enable_if<msgpack::has
 #endif // !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Compare, typename Alloc>
-struct convert<std::multiset<T, Compare, Alloc> > {
-    msgpack::object const& operator()(msgpack::object const& o, std::multiset<T, Compare, Alloc>& v) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct convert<eastl::multiset<T, Compare, Alloc> > {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::multiset<T, Compare, Alloc>& v) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         msgpack::object* p = o.via.array.ptr + o.via.array.size;
         msgpack::object* const pbegin = o.via.array.ptr;
-        std::multiset<T, Compare, Alloc> tmp;
+        eastl::multiset<T, Compare, Alloc> tmp;
         while (p > pbegin) {
             --p;
             tmp.insert(p->as<T>());
@@ -141,12 +141,12 @@ struct convert<std::multiset<T, Compare, Alloc> > {
 };
 
 template <typename T, typename Compare, typename Alloc>
-struct pack<std::multiset<T, Compare, Alloc> > {
+struct pack<eastl::multiset<T, Compare, Alloc> > {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::multiset<T, Compare, Alloc>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::multiset<T, Compare, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_array(size);
-        for (typename std::multiset<T, Compare, Alloc>::const_iterator it(v.begin()), it_end(v.end());
+        for (typename eastl::multiset<T, Compare, Alloc>::const_iterator it(v.begin()), it_end(v.end());
             it != it_end; ++it) {
             o.pack(*it);
         }
@@ -155,8 +155,8 @@ struct pack<std::multiset<T, Compare, Alloc> > {
 };
 
 template <typename T, typename Compare, typename Alloc>
-struct object_with_zone<std::multiset<T, Compare, Alloc> > {
-    void operator()(msgpack::object::with_zone& o, const std::multiset<T, Compare, Alloc>& v) const {
+struct object_with_zone<eastl::multiset<T, Compare, Alloc> > {
+    void operator()(msgpack::object::with_zone& o, const eastl::multiset<T, Compare, Alloc>& v) const {
         o.type = msgpack::type::ARRAY;
         if (v.empty()) {
             o.via.array.ptr = MSGPACK_NULLPTR;
@@ -167,7 +167,7 @@ struct object_with_zone<std::multiset<T, Compare, Alloc> > {
             msgpack::object* const pend = p + size;
             o.via.array.ptr = p;
             o.via.array.size = size;
-            typename std::multiset<T, Compare, Alloc>::const_iterator it(v.begin());
+            typename eastl::multiset<T, Compare, Alloc>::const_iterator it(v.begin());
             do {
                 *p = msgpack::object(*it, o.zone);
                 ++p;

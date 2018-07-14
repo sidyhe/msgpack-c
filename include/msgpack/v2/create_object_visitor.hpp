@@ -105,7 +105,7 @@ public:
         return true;
     }
     bool visit_str(const char* v, uint32_t size) {
-        if (size > m_limit.str()) throw msgpack::str_size_overflow("str size overflow");
+        if (size > m_limit.str()) ExRaiseStatus(EMSGPACK_STR_SIZE_OVERFLOW);
         msgpack::object* obj = m_stack.back();
         obj->type = msgpack::type::STR;
         if (m_func && m_func(obj->type, size, m_user_data)) {
@@ -121,7 +121,7 @@ public:
         return true;
     }
     bool visit_bin(const char* v, uint32_t size) {
-        if (size > m_limit.bin()) throw msgpack::bin_size_overflow("bin size overflow");
+        if (size > m_limit.bin()) ExRaiseStatus(EMSGPACK_BIN_SIZE_OVERFLOW);
         msgpack::object* obj = m_stack.back();
         obj->type = msgpack::type::BIN;
         if (m_func && m_func(obj->type, size, m_user_data)) {
@@ -137,7 +137,7 @@ public:
         return true;
     }
     bool visit_ext(const char* v, uint32_t size) {
-        if (size > m_limit.ext()) throw msgpack::ext_size_overflow("ext size overflow");
+        if (size > m_limit.ext()) ExRaiseStatus(EMSGPACK_EXT_SIZE_OVERFLOW);
         msgpack::object* obj = m_stack.back();
         obj->type = msgpack::type::EXT;
         if (m_func && m_func(obj->type, size, m_user_data)) {
@@ -153,8 +153,8 @@ public:
         return true;
     }
     bool start_array(uint32_t num_elements) {
-        if (num_elements > m_limit.array()) throw msgpack::array_size_overflow("array size overflow");
-        if (m_stack.size() > m_limit.depth()) throw msgpack::depth_size_overflow("depth size overflow");
+        if (num_elements > m_limit.array()) ExRaiseStatus(EMSGPACK_ARRAY_SIZE_OVERFLOW);
+        if (m_stack.size() > m_limit.depth()) ExRaiseStatus(EMSGPACK_DEPTH_SIZE_OVERFLOW);
         msgpack::object* obj = m_stack.back();
         obj->type = msgpack::type::ARRAY;
         obj->via.array.size = num_elements;
@@ -164,7 +164,7 @@ public:
         else {
             size_t size = num_elements*sizeof(msgpack::object);
             if (size / sizeof(msgpack::object) != num_elements) {
-                throw msgpack::array_size_overflow("array size overflow");
+                ExRaiseStatus(EMSGPACK_ARRAY_SIZE_OVERFLOW);
             }
             obj->via.array.ptr =
                 static_cast<msgpack::object*>(m_zone->allocate_align(size, MSGPACK_ZONE_ALIGNOF(msgpack::object)));
@@ -184,8 +184,8 @@ public:
         return true;
     }
     bool start_map(uint32_t num_kv_pairs) {
-        if (num_kv_pairs > m_limit.map()) throw msgpack::map_size_overflow("map size overflow");
-        if (m_stack.size() > m_limit.depth()) throw msgpack::depth_size_overflow("depth size overflow");
+        if (num_kv_pairs > m_limit.map()) ExRaiseStatus(EMSGPACK_MAP_SIZE_OVERFLOW);
+        if (m_stack.size() > m_limit.depth()) ExRaiseStatus(EMSGPACK_DEPTH_SIZE_OVERFLOW);
         msgpack::object* obj = m_stack.back();
         obj->type = msgpack::type::MAP;
         obj->via.map.size = num_kv_pairs;
@@ -195,7 +195,7 @@ public:
         else {
             size_t size = num_kv_pairs*sizeof(msgpack::object_kv);
             if (size / sizeof(msgpack::object_kv) != num_kv_pairs) {
-                throw msgpack::map_size_overflow("map size overflow");
+                ExRaiseStatus(EMSGPACK_MAP_SIZE_OVERFLOW);
             }
             obj->via.map.ptr =
                 static_cast<msgpack::object_kv*>(m_zone->allocate_align(size, MSGPACK_ZONE_ALIGNOF(msgpack::object_kv)));
@@ -222,10 +222,10 @@ public:
         return true;
     }
     void parse_error(size_t /*parsed_offset*/, size_t /*error_offset*/) {
-        throw msgpack::parse_error("parse error");
+        ExRaiseStatus(EMSGPACK_PARSE_ERROR);
     }
     void insufficient_bytes(size_t /*parsed_offset*/, size_t /*error_offset*/) {
-        throw msgpack::insufficient_bytes("insufficient bytes");
+        ExRaiseStatus(EMSGPACK_INSUFFICIENT_BYTES);
     }
 private:
 public:
@@ -233,7 +233,7 @@ public:
     void* m_user_data;
     unpack_limit m_limit;
     msgpack::object m_obj;
-    std::vector<msgpack::object*> m_stack;
+    eastl::vector<msgpack::object*> m_stack;
     msgpack::zone* m_zone;
     bool m_referenced;
 };

@@ -13,7 +13,7 @@
 #include "msgpack/v1/adaptor/raw_decl.hpp"
 
 #include <cstring>
-#include <string>
+#include <eastl/string.h>
 
 namespace msgpack {
 
@@ -30,7 +30,7 @@ struct raw_ref {
     uint32_t size;
     const char* ptr;
 
-    std::string str() const { return std::string(ptr, size); }
+    eastl::string str() const { return eastl::string(ptr, size); }
 
     bool operator== (const raw_ref& x) const
     {
@@ -62,7 +62,7 @@ namespace adaptor {
 template <>
 struct convert<type::raw_ref> {
     msgpack::object const& operator()(msgpack::object const& o, type::raw_ref& v) const {
-        if(o.type != msgpack::type::BIN) { throw msgpack::type_error(); }
+        if(o.type != msgpack::type::BIN) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         v.ptr  = o.via.bin.ptr;
         v.size = o.via.bin.size;
         return o;

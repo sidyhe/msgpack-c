@@ -26,8 +26,8 @@ namespace adaptor {
 template <typename T, std::size_t N>
 struct convert<T[N]> {
     msgpack::object const& operator()(msgpack::object const& o, T* v) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
-        if (o.via.array.size > N) { throw msgpack::type_error(); }
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        if (o.via.array.size > N) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         msgpack::object* p = o.via.array.ptr;
         msgpack::object* const pend = o.via.array.ptr + o.via.array.size;
         do {
@@ -44,16 +44,16 @@ struct convert<char[N]> {
     msgpack::object const& operator()(msgpack::object const& o, char(&v)[N]) const {
         switch (o.type) {
         case msgpack::type::BIN:
-            if (o.via.bin.size > N) { throw msgpack::type_error(); }
+            if (o.via.bin.size > N) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
             std::memcpy(v, o.via.bin.ptr, o.via.bin.size);
             break;
         case msgpack::type::STR:
-            if (o.via.str.size > N) { throw msgpack::type_error(); }
+            if (o.via.str.size > N) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
             std::memcpy(v, o.via.str.ptr, o.via.str.size);
             if (o.via.str.size < N) v[o.via.str.size] = '\0';
             break;
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
             break;
         }
         return o;
@@ -65,16 +65,16 @@ struct convert<unsigned char[N]> {
     msgpack::object const& operator()(msgpack::object const& o, unsigned char(&v)[N]) const {
         switch (o.type) {
         case msgpack::type::BIN:
-            if (o.via.bin.size > N) { throw msgpack::type_error(); }
+            if (o.via.bin.size > N) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
             std::memcpy(v, o.via.bin.ptr, o.via.bin.size);
             break;
         case msgpack::type::STR:
-            if (o.via.str.size > N) { throw msgpack::type_error(); }
+            if (o.via.str.size > N) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
             std::memcpy(v, o.via.str.ptr, o.via.str.size);
             if (o.via.str.size < N) v[o.via.str.size] = '\0';
             break;
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
             break;
         }
         return o;

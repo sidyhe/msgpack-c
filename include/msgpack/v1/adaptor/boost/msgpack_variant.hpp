@@ -48,17 +48,17 @@ struct basic_variant :
         int64_t,           // NEGATIVE_INTEGER
         uint64_t,          // POSITIVE_INTEGER
         double,            // FLOAT32, FLOAT64
-        std::string,       // STR
+        eastl::string,       // STR
 #if (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
         boost::string_ref, // STR
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
-        std::vector<char>, // BIN
+        eastl::vector<char>, // BIN
         msgpack::type::raw_ref, // BIN
         msgpack::type::ext,               // EXT
         msgpack::type::ext_ref,           // EXT
-        boost::recursive_wrapper<std::vector<basic_variant<STR, BIN, EXT> > >, // ARRAY
-        boost::recursive_wrapper<std::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >, // MAP
-        boost::recursive_wrapper<std::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >// MAP
+        boost::recursive_wrapper<eastl::vector<basic_variant<STR, BIN, EXT> > >, // ARRAY
+        boost::recursive_wrapper<eastl::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >, // MAP
+        boost::recursive_wrapper<eastl::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >// MAP
     >,
     private boost::totally_ordered<basic_variant<STR, BIN, EXT> > {
     typedef boost::variant<
@@ -67,17 +67,17 @@ struct basic_variant :
         int64_t,           // NEGATIVE_INTEGER
         uint64_t,          // POSITIVE_INTEGER
         double,            // FLOAT32, FLOAT64
-        std::string,       // STR
+        eastl::string,       // STR
 #if (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
         boost::string_ref, // STR
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
-        std::vector<char>, // BIN
+        eastl::vector<char>, // BIN
         msgpack::type::raw_ref, // BIN
         msgpack::type::ext,               // EXT
         msgpack::type::ext_ref,           // EXT
-        boost::recursive_wrapper<std::vector<basic_variant<STR, BIN, EXT> > >, // ARRAY
-        boost::recursive_wrapper<std::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >, // MAP
-        boost::recursive_wrapper<std::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >// MAP
+        boost::recursive_wrapper<eastl::vector<basic_variant<STR, BIN, EXT> > >, // ARRAY
+        boost::recursive_wrapper<eastl::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >, // MAP
+        boost::recursive_wrapper<eastl::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >// MAP
     > base;
     basic_variant() {}
     template <typename T>
@@ -93,7 +93,7 @@ struct basic_variant :
     }
 #endif // defined(_MSC_VER) && _MSC_VER < 1700
 
-    basic_variant(char const* p):base(std::string(p)) {}
+    basic_variant(char const* p):base(eastl::string(p)) {}
     basic_variant(char v) {
         int_init(v);
     }
@@ -130,7 +130,7 @@ struct basic_variant :
         return boost::get<double>(this) != MSGPACK_NULLPTR;
     }
     bool is_string() const {
-        return boost::get<std::string>(this) != MSGPACK_NULLPTR;
+        return boost::get<eastl::string>(this) != MSGPACK_NULLPTR;
     }
 #if (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     bool is_boost_string_ref() const {
@@ -138,10 +138,10 @@ struct basic_variant :
     }
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     bool is_vector_char() const {
-        return boost::get<std::vector<char> >(this) != MSGPACK_NULLPTR;
+        return boost::get<eastl::vector<char> >(this) != MSGPACK_NULLPTR;
     }
     bool is_vector_char() {
-        return boost::get<std::vector<char> >(this) != MSGPACK_NULLPTR;
+        return boost::get<eastl::vector<char> >(this) != MSGPACK_NULLPTR;
     }
     bool is_raw_ref() const {
         return boost::get<raw_ref>(this) != MSGPACK_NULLPTR;
@@ -153,13 +153,13 @@ struct basic_variant :
         return boost::get<ext_ref>(this) != MSGPACK_NULLPTR;
     }
     bool is_vector() const {
-        return boost::get<std::vector<basic_variant<STR, BIN, EXT> > >(this) != MSGPACK_NULLPTR;
+        return boost::get<eastl::vector<basic_variant<STR, BIN, EXT> > >(this) != MSGPACK_NULLPTR;
     }
     bool is_map() const {
-        return boost::get<std::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(this) != MSGPACK_NULLPTR;
+        return boost::get<eastl::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(this) != MSGPACK_NULLPTR;
     }
     bool is_multimap() const {
-        return boost::get<std::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(this) != MSGPACK_NULLPTR;
+        return boost::get<eastl::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(this) != MSGPACK_NULLPTR;
     }
 
     bool as_bool() const {
@@ -183,11 +183,11 @@ struct basic_variant :
     double& as_double() {
         return boost::get<double>(*this);
     }
-    std::string const& as_string() const {
-        return boost::get<std::string>(*this);
+    eastl::string const& as_string() const {
+        return boost::get<eastl::string>(*this);
     }
-    std::string& as_string() {
-        return boost::get<std::string>(*this);
+    eastl::string& as_string() {
+        return boost::get<eastl::string>(*this);
     }
 #if (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     boost::string_ref const& as_boost_string_ref() const {
@@ -197,11 +197,11 @@ struct basic_variant :
         return boost::get<boost::string_ref>(*this);
     }
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
-    std::vector<char> const& as_vector_char() const {
-        return boost::get<std::vector<char> >(*this);
+    eastl::vector<char> const& as_vector_char() const {
+        return boost::get<eastl::vector<char> >(*this);
     }
-    std::vector<char>& as_vector_char() {
-        return boost::get<std::vector<char> >(*this);
+    eastl::vector<char>& as_vector_char() {
+        return boost::get<eastl::vector<char> >(*this);
     }
     raw_ref const& as_raw_ref() const {
         return boost::get<raw_ref>(*this);
@@ -215,23 +215,23 @@ struct basic_variant :
     ext_ref const& as_ext_ref() const {
         return boost::get<ext_ref>(*this);
     }
-    std::vector<basic_variant<STR, BIN, EXT> > const& as_vector() const {
-        return boost::get<std::vector<basic_variant<STR, BIN, EXT> > >(*this);
+    eastl::vector<basic_variant<STR, BIN, EXT> > const& as_vector() const {
+        return boost::get<eastl::vector<basic_variant<STR, BIN, EXT> > >(*this);
     }
-    std::vector<basic_variant<STR, BIN, EXT> >& as_vector() {
-        return boost::get<std::vector<basic_variant<STR, BIN, EXT> > >(*this);
+    eastl::vector<basic_variant<STR, BIN, EXT> >& as_vector() {
+        return boost::get<eastl::vector<basic_variant<STR, BIN, EXT> > >(*this);
     }
-    std::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > const& as_map() const {
-        return boost::get<std::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
+    eastl::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > const& as_map() const {
+        return boost::get<eastl::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
     }
-    std::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> >& as_map() {
-        return boost::get<std::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
+    eastl::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> >& as_map() {
+        return boost::get<eastl::map<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
     }
-    std::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > const& as_multimap() const {
-        return boost::get<std::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
+    eastl::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > const& as_multimap() const {
+        return boost::get<eastl::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
     }
-    std::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> >& as_multimap() {
-        return boost::get<std::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
+    eastl::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> >& as_multimap() {
+        return boost::get<eastl::multimap<basic_variant<STR, BIN, EXT>, basic_variant<STR, BIN, EXT> > >(*this);
     }
 private:
     template <typename T>
@@ -259,12 +259,12 @@ inline bool operator==(basic_variant<STR, BIN, EXT> const& lhs, basic_variant<ST
         static_cast<typename basic_variant<STR, BIN, EXT>::base const&>(rhs);
 }
 
-typedef basic_variant<std::string, std::vector<char>, ext> variant;
+typedef basic_variant<eastl::string, eastl::vector<char>, ext> variant;
 typedef basic_variant<
 #if (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     boost::string_ref,
 #else  // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
-    std::string,
+    eastl::string,
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     raw_ref, ext_ref> variant_ref;
 
@@ -296,9 +296,9 @@ struct as<type::basic_variant<STR, BIN, EXT> > {
         case type::EXT:
             return o.as<EXT>();
         case type::ARRAY:
-            return o.as<std::vector<type::basic_variant<STR, BIN, EXT> > >();
+            return o.as<eastl::vector<type::basic_variant<STR, BIN, EXT> > >();
         case type::MAP:
-            return o.as<std::multimap<type::basic_variant<STR, BIN, EXT>, type::basic_variant<STR, BIN, EXT> > >();
+            return o.as<eastl::multimap<type::basic_variant<STR, BIN, EXT>, type::basic_variant<STR, BIN, EXT> > >();
         default:
             break;
         }
@@ -341,10 +341,10 @@ struct convert<type::basic_variant<STR, BIN, EXT> > {
             v = o.as<EXT>();
             break;
         case type::ARRAY:
-            v = o.as<std::vector<type::basic_variant<STR, BIN, EXT> > >();
+            v = o.as<eastl::vector<type::basic_variant<STR, BIN, EXT> > >();
             break;
         case type::MAP:
-            v = o.as<std::multimap<type::basic_variant<STR, BIN, EXT>, type::basic_variant<STR, BIN, EXT> > >();
+            v = o.as<eastl::multimap<type::basic_variant<STR, BIN, EXT>, type::basic_variant<STR, BIN, EXT> > >();
             break;
         default:
             break;
@@ -396,7 +396,7 @@ struct object_imp : boost::static_visitor<void> {
     }
     template <typename T>
     void operator()(T const&) const {
-        throw msgpack::type_error();
+        ExRaiseStatus(EMSGPACK_TYPE_ERROR);
     }
     object_imp(msgpack::object& o):o_(o) {}
     msgpack::object& o_;

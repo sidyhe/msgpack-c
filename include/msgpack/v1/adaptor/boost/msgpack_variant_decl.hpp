@@ -19,8 +19,8 @@
 #include "msgpack/adaptor/ext.hpp"
 #include "msgpack/adaptor/raw.hpp"
 
-#include <string>
-#include <vector>
+#include <eastl/string.h>
+#include <eastl/vector.h>
 namespace msgpack {
 
 /// @cond
@@ -41,12 +41,12 @@ bool operator==(basic_variant<STR, BIN, EXT> const& lhs, basic_variant<STR, BIN,
 template <typename STR, typename BIN, typename EXT>
 bool operator!=(basic_variant<STR, BIN, EXT> const& lhs, basic_variant<STR, BIN, EXT> const& rhs);
 
-typedef basic_variant<std::string, std::vector<char>, msgpack::type::ext> variant;
+typedef basic_variant<eastl::string, eastl::vector<char>, msgpack::type::ext> variant;
 typedef basic_variant<
 #if (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     boost::string_ref,
 #else  // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
-    std::string,
+    eastl::string,
 #endif // (BOOST_VERSION / 100000) >= 1 && ((BOOST_VERSION / 100) % 1000) >= 53
     msgpack::type::raw_ref, msgpack::type::ext_ref> variant_ref;
 

@@ -14,7 +14,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 
-#include <deque>
+#include <eastl/deque.h>
 
 namespace msgpack {
 
@@ -27,10 +27,10 @@ namespace adaptor {
 #if !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Alloc>
-struct as<std::deque<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
-    std::deque<T, Alloc> operator()(const msgpack::object& o) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
-        std::deque<T, Alloc> v;
+struct as<eastl::deque<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
+    eastl::deque<T, Alloc> operator()(const msgpack::object& o) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::deque<T, Alloc> v;
         if (o.via.array.size > 0) {
             msgpack::object* p = o.via.array.ptr;
             msgpack::object* const pend = o.via.array.ptr + o.via.array.size;
@@ -46,13 +46,13 @@ struct as<std::deque<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::valu
 #endif // !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Alloc>
-struct convert<std::deque<T, Alloc> > {
-    msgpack::object const& operator()(msgpack::object const& o, std::deque<T, Alloc>& v) const {
-        if(o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct convert<eastl::deque<T, Alloc> > {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::deque<T, Alloc>& v) const {
+        if(o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         v.resize(o.via.array.size);
         msgpack::object* p = o.via.array.ptr;
         msgpack::object* const pend = o.via.array.ptr + o.via.array.size;
-        typename std::deque<T, Alloc>::iterator it = v.begin();
+        typename eastl::deque<T, Alloc>::iterator it = v.begin();
         for(; p < pend; ++p, ++it) {
             p->convert(*it);
         }
@@ -61,12 +61,12 @@ struct convert<std::deque<T, Alloc> > {
 };
 
 template <typename T, typename Alloc>
-struct pack<std::deque<T, Alloc> > {
+struct pack<eastl::deque<T, Alloc> > {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::deque<T, Alloc>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::deque<T, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_array(size);
-        for(typename std::deque<T, Alloc>::const_iterator it(v.begin()), it_end(v.end());
+        for(typename eastl::deque<T, Alloc>::const_iterator it(v.begin()), it_end(v.end());
             it != it_end; ++it) {
             o.pack(*it);
         }
@@ -75,8 +75,8 @@ struct pack<std::deque<T, Alloc> > {
 };
 
 template <typename T, typename Alloc>
-struct object_with_zone<std::deque<T, Alloc> > {
-    void operator()(msgpack::object::with_zone& o, const std::deque<T, Alloc>& v) const {
+struct object_with_zone<eastl::deque<T, Alloc> > {
+    void operator()(msgpack::object::with_zone& o, const eastl::deque<T, Alloc>& v) const {
         o.type = msgpack::type::ARRAY;
         if(v.empty()) {
             o.via.array.ptr = MSGPACK_NULLPTR;
@@ -87,7 +87,7 @@ struct object_with_zone<std::deque<T, Alloc> > {
             msgpack::object* const pend = p + size;
             o.via.array.ptr = p;
             o.via.array.size = size;
-            typename std::deque<T, Alloc>::const_iterator it(v.begin());
+            typename eastl::deque<T, Alloc>::const_iterator it(v.begin());
             do {
                 *p = msgpack::object(*it, o.zone);
                 ++p;

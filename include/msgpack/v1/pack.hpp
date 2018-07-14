@@ -12,7 +12,6 @@
 
 #include "msgpack/v1/pack_decl.hpp"
 
-#include <stdexcept>
 #include <limits>
 #include <cstring>
 #include <climits>

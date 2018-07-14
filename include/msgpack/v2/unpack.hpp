@@ -130,9 +130,9 @@ inline void unpacker::reset_zone()
 inline bool unpacker::flush_zone()
 {
     if(referenced()) {
-        try {
+        __try {
             m_z->push_finalizer(&detail::decr_count, get_raw_buffer());
-        } catch (...) {
+        } __except (EXCEPTION_EXECUTE_HANDLER) {
             return false;
         }
         set_referenced(false);

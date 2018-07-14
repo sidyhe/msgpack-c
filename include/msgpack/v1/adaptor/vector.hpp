@@ -14,7 +14,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 
-#include <vector>
+#include <eastl/vector.h>
 
 namespace msgpack {
 
@@ -27,10 +27,10 @@ namespace adaptor {
 #if !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Alloc>
-struct as<std::vector<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
-    std::vector<T, Alloc> operator()(const msgpack::object& o) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
-        std::vector<T, Alloc> v;
+struct as<eastl::vector<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
+    eastl::vector<T, Alloc> operator()(const msgpack::object& o) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::vector<T, Alloc> v;
         v.reserve(o.via.array.size);
         if (o.via.array.size > 0) {
             msgpack::object* p = o.via.array.ptr;
@@ -47,14 +47,14 @@ struct as<std::vector<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::val
 #endif // !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Alloc>
-struct convert<std::vector<T, Alloc> > {
-    msgpack::object const& operator()(msgpack::object const& o, std::vector<T, Alloc>& v) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct convert<eastl::vector<T, Alloc> > {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::vector<T, Alloc>& v) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         v.resize(o.via.array.size);
         if (o.via.array.size > 0) {
             msgpack::object* p = o.via.array.ptr;
             msgpack::object* const pend = o.via.array.ptr + o.via.array.size;
-            typename std::vector<T, Alloc>::iterator it = v.begin();
+            typename eastl::vector<T, Alloc>::iterator it = v.begin();
             do {
                 p->convert(*it);
                 ++p;
@@ -66,12 +66,12 @@ struct convert<std::vector<T, Alloc> > {
 };
 
 template <typename T, typename Alloc>
-struct pack<std::vector<T, Alloc> > {
+struct pack<eastl::vector<T, Alloc> > {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::vector<T, Alloc>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::vector<T, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_array(size);
-        for (typename std::vector<T, Alloc>::const_iterator it(v.begin()), it_end(v.end());
+        for (typename eastl::vector<T, Alloc>::const_iterator it(v.begin()), it_end(v.end());
             it != it_end; ++it) {
             o.pack(*it);
         }
@@ -80,8 +80,8 @@ struct pack<std::vector<T, Alloc> > {
 };
 
 template <typename T, typename Alloc>
-struct object_with_zone<std::vector<T, Alloc> > {
-    void operator()(msgpack::object::with_zone& o, const std::vector<T, Alloc>& v) const {
+struct object_with_zone<eastl::vector<T, Alloc> > {
+    void operator()(msgpack::object::with_zone& o, const eastl::vector<T, Alloc>& v) const {
         o.type = msgpack::type::ARRAY;
         if (v.empty()) {
             o.via.array.ptr = MSGPACK_NULLPTR;
@@ -93,7 +93,7 @@ struct object_with_zone<std::vector<T, Alloc> > {
             msgpack::object* const pend = p + size;
             o.via.array.ptr = p;
             o.via.array.size = size;
-            typename std::vector<T, Alloc>::const_iterator it(v.begin());
+            typename eastl::vector<T, Alloc>::const_iterator it(v.begin());
             do {
 #if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)) && !defined(__clang__)
 #pragma GCC diagnostic push

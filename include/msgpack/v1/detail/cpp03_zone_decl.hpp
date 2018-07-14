@@ -12,7 +12,7 @@
 
 #include <cstdlib>
 #include <memory>
-#include <vector>
+#include <eastl/vector.h>
 
 #include "msgpack/versioning.hpp"
 

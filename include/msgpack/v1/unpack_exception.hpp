@@ -12,8 +12,7 @@
 
 #include "msgpack/versioning.hpp"
 
-#include <string>
-#include <stdexcept>
+#include <eastl/string.h>
 
 
 namespace msgpack {
@@ -21,9 +20,9 @@ namespace msgpack {
 /// @cond
 MSGPACK_API_VERSION_NAMESPACE(v1) {
 /// @endcond
-
+#if 0
 struct unpack_error : public std::runtime_error {
-    explicit unpack_error(const std::string& msg)
+    explicit unpack_error(const eastl::string& msg)
         :std::runtime_error(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     explicit unpack_error(const char* msg):
@@ -32,7 +31,7 @@ struct unpack_error : public std::runtime_error {
 };
 
 struct parse_error : public unpack_error {
-    explicit parse_error(const std::string& msg)
+    explicit parse_error(const eastl::string& msg)
         :unpack_error(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     explicit parse_error(const char* msg)
@@ -41,7 +40,7 @@ struct parse_error : public unpack_error {
 };
 
 struct insufficient_bytes : public unpack_error {
-    explicit insufficient_bytes(const std::string& msg)
+    explicit insufficient_bytes(const eastl::string& msg)
         :unpack_error(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     explicit insufficient_bytes(const char* msg)
@@ -50,7 +49,7 @@ struct insufficient_bytes : public unpack_error {
 };
 
 struct size_overflow : public unpack_error {
-    explicit size_overflow(const std::string& msg)
+    explicit size_overflow(const eastl::string& msg)
         :unpack_error(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     explicit size_overflow(const char* msg)
@@ -59,7 +58,7 @@ struct size_overflow : public unpack_error {
 };
 
 struct array_size_overflow : public size_overflow {
-    array_size_overflow(const std::string& msg)
+    array_size_overflow(const eastl::string& msg)
         :size_overflow(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     array_size_overflow(const char* msg)
@@ -68,7 +67,7 @@ struct array_size_overflow : public size_overflow {
 };
 
 struct map_size_overflow : public size_overflow {
-    map_size_overflow(const std::string& msg)
+    map_size_overflow(const eastl::string& msg)
         :size_overflow(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     map_size_overflow(const char* msg)
@@ -77,7 +76,7 @@ struct map_size_overflow : public size_overflow {
 };
 
 struct str_size_overflow : public size_overflow {
-    str_size_overflow(const std::string& msg)
+    str_size_overflow(const eastl::string& msg)
         :size_overflow(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     str_size_overflow(const char* msg)
@@ -86,7 +85,7 @@ struct str_size_overflow : public size_overflow {
 };
 
 struct bin_size_overflow : public size_overflow {
-    bin_size_overflow(const std::string& msg)
+    bin_size_overflow(const eastl::string& msg)
         :size_overflow(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     bin_size_overflow(const char* msg)
@@ -95,7 +94,7 @@ struct bin_size_overflow : public size_overflow {
 };
 
 struct ext_size_overflow : public size_overflow {
-    ext_size_overflow(const std::string& msg)
+    ext_size_overflow(const eastl::string& msg)
         :size_overflow(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     ext_size_overflow(const char* msg)
@@ -104,14 +103,14 @@ struct ext_size_overflow : public size_overflow {
 };
 
 struct depth_size_overflow : public size_overflow {
-    depth_size_overflow(const std::string& msg)
+    depth_size_overflow(const eastl::string& msg)
         :size_overflow(msg) {}
 #if !defined(MSGPACK_USE_CPP03)
     depth_size_overflow(const char* msg)
         :size_overflow(msg) {}
 #endif
 };
-
+#endif
 /// @cond
 }  // MSGPACK_API_VERSION_NAMESPACE(v1)
 /// @endcond

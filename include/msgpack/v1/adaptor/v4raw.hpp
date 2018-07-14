@@ -12,7 +12,7 @@
 
 #include "msgpack/v1/adaptor/v4raw_decl.hpp"
 #include <cstring>
-#include <string>
+#include <eastl/string.h>
 
 namespace msgpack {
 
@@ -29,7 +29,7 @@ struct v4raw_ref {
     uint32_t size;
     const char* ptr;
 
-    std::string str() const { return std::string(ptr, size); }
+    eastl::string str() const { return eastl::string(ptr, size); }
 
     bool operator== (const v4raw_ref& x) const
     {
@@ -61,7 +61,7 @@ namespace adaptor {
 template <>
 struct convert<type::v4raw_ref> {
     msgpack::object const& operator()(msgpack::object const& o, type::v4raw_ref& v) const {
-        if(o.type != msgpack::type::STR) { throw msgpack::type_error(); }
+        if(o.type != msgpack::type::STR) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         v.ptr  = o.via.str.ptr;
         v.size = o.via.str.size;
         return o;

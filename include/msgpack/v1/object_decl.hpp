@@ -16,12 +16,9 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 
 #include <cstring>
-#include <stdexcept>
 #include <typeinfo>
 #include <limits>
-#include <ostream>
 #include <typeinfo>
-#include <iomanip>
 
 namespace msgpack {
 
@@ -104,7 +101,6 @@ msgpack::packer<Stream>& operator<< (msgpack::packer<Stream>& o, const msgpack::
 template <typename Stream>
 msgpack::packer<Stream>& operator<< (msgpack::packer<Stream>& o, const msgpack::object::with_zone& v);
 
-std::ostream& operator<< (std::ostream& s, const msgpack::object& o);
 
 /// @cond
 }  // MSGPACK_API_VERSION_NAMESPACE(v1)

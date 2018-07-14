@@ -14,7 +14,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 
-#include <list>
+#include <eastl/list.h>
 
 namespace msgpack {
 
@@ -27,10 +27,10 @@ namespace adaptor {
 #if !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Alloc>
-struct as<std::list<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
-    std::list<T, Alloc> operator()(msgpack::object const& o) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
-        std::list<T, Alloc> v;
+struct as<eastl::list<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::value>::type> {
+    eastl::list<T, Alloc> operator()(msgpack::object const& o) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
+        eastl::list<T, Alloc> v;
         msgpack::object* p = o.via.array.ptr;
         msgpack::object* const pend = o.via.array.ptr + o.via.array.size;
         for (; p < pend; ++p) {
@@ -43,13 +43,13 @@ struct as<std::list<T, Alloc>, typename std::enable_if<msgpack::has_as<T>::value
 #endif // !defined(MSGPACK_USE_CPP03)
 
 template <typename T, typename Alloc>
-struct convert<std::list<T, Alloc> > {
-    msgpack::object const& operator()(msgpack::object const& o, std::list<T, Alloc>& v) const {
-        if (o.type != msgpack::type::ARRAY) { throw msgpack::type_error(); }
+struct convert<eastl::list<T, Alloc> > {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::list<T, Alloc>& v) const {
+        if (o.type != msgpack::type::ARRAY) { ExRaiseStatus(EMSGPACK_TYPE_ERROR); }
         v.resize(o.via.array.size);
         msgpack::object* p = o.via.array.ptr;
         msgpack::object* const pend = o.via.array.ptr + o.via.array.size;
-        typename std::list<T, Alloc>::iterator it = v.begin();
+        typename eastl::list<T, Alloc>::iterator it = v.begin();
         for (; p < pend; ++p, ++it) {
             p->convert(*it);
         }
@@ -58,12 +58,12 @@ struct convert<std::list<T, Alloc> > {
 };
 
 template <typename T, typename Alloc>
-struct pack<std::list<T, Alloc> > {
+struct pack<eastl::list<T, Alloc> > {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::list<T, Alloc>& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::list<T, Alloc>& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_array(size);
-        for (typename std::list<T, Alloc>::const_iterator it(v.begin()), it_end(v.end());
+        for (typename eastl::list<T, Alloc>::const_iterator it(v.begin()), it_end(v.end());
             it != it_end; ++it) {
             o.pack(*it);
         }
@@ -72,8 +72,8 @@ struct pack<std::list<T, Alloc> > {
 };
 
 template <typename T, typename Alloc>
-struct object_with_zone<std::list<T, Alloc> > {
-    void operator()(msgpack::object::with_zone& o, const std::list<T, Alloc>& v) const {
+struct object_with_zone<eastl::list<T, Alloc> > {
+    void operator()(msgpack::object::with_zone& o, const eastl::list<T, Alloc>& v) const {
         o.type = msgpack::type::ARRAY;
         if (v.empty()) {
             o.via.array.ptr = MSGPACK_NULLPTR;
@@ -85,7 +85,7 @@ struct object_with_zone<std::list<T, Alloc> > {
             msgpack::object* const pend = p + size;
             o.via.array.ptr = p;
             o.via.array.size = size;
-            typename std::list<T, Alloc>::const_iterator it(v.begin());
+            typename eastl::list<T, Alloc>::const_iterator it(v.begin());
             do {
                 *p = msgpack::object(*it, o.zone);
                 ++p;

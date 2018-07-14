@@ -13,7 +13,7 @@
 #include "msgpack/versioning.hpp"
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include <cstring>
-#include <string>
+#include <eastl/string.h>
 #include <cassert>
 
 namespace msgpack {

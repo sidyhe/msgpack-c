@@ -215,7 +215,7 @@ private:
         bool empty() const { return m_stack.empty(); }
         void clear() { m_stack.clear(); }
     private:
-        std::vector<stack_elem> m_stack;
+        eastl::vector<stack_elem> m_stack;
     };
 
     char const* m_start;
@@ -233,7 +233,7 @@ inline void check_ext_size(std::size_t /*size*/) {
 
 template <>
 inline void check_ext_size<4>(std::size_t size) {
-    if (size == 0xffffffff) throw msgpack::ext_size_overflow("ext size overflow");
+    if (size == 0xffffffff) ExRaiseStatus(EMSGPACK_EXT_SIZE_OVERFLOW);
 }
 
 template <typename VisitorHolder>
@@ -799,7 +799,7 @@ inline parser<VisitorHolder, ReferencedBufferHook>::parser(
 
     char* buffer = static_cast<char*>(::malloc(initial_buffer_size));
     if(!buffer) {
-        throw std::bad_alloc();
+        ExRaiseStatus(EMSGPACK_BAD_ALLOC);
     }
 
     m_buffer = buffer;
@@ -881,9 +881,9 @@ inline void parser<VisitorHolder, ReferencedBufferHook>::expand_buffer(std::size
             next_size = tmp_next_size;
         }
 
-        char* tmp = static_cast<char*>(::realloc(m_buffer, next_size));
-        if(!tmp) {
-            throw std::bad_alloc();
+		char* tmp = static_cast<char*>(::realloc(m_buffer, next_size));
+		if (!tmp) {
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
 
         m_buffer = tmp;
@@ -903,7 +903,7 @@ inline void parser<VisitorHolder, ReferencedBufferHook>::expand_buffer(std::size
 
         char* tmp = static_cast<char*>(::malloc(next_size));
         if(!tmp) {
-            throw std::bad_alloc();
+            ExRaiseStatus(EMSGPACK_BAD_ALLOC);
         }
 
         detail::init_count(tmp);

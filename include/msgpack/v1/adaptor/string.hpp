@@ -14,7 +14,7 @@
 #include "msgpack/adaptor/adaptor_base.hpp"
 #include "msgpack/adaptor/check_container_size.hpp"
 
-#include <string>
+#include <eastl/string.h>
 #include <cstring>
 
 namespace msgpack {
@@ -26,8 +26,8 @@ MSGPACK_API_VERSION_NAMESPACE(v1) {
 namespace adaptor {
 
 template <>
-struct convert<std::string> {
-    msgpack::object const& operator()(msgpack::object const& o, std::string& v) const {
+struct convert<eastl::string> {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::string& v) const {
         switch (o.type) {
         case msgpack::type::BIN:
             v.assign(o.via.bin.ptr, o.via.bin.size);
@@ -36,7 +36,7 @@ struct convert<std::string> {
             v.assign(o.via.str.ptr, o.via.str.size);
             break;
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
             break;
         }
         return o;
@@ -44,9 +44,9 @@ struct convert<std::string> {
 };
 
 template <>
-struct pack<std::string> {
+struct pack<eastl::string> {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::string& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::string& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_str(size);
         o.pack_str_body(v.data(), size);
@@ -55,8 +55,8 @@ struct pack<std::string> {
 };
 
 template <>
-struct object<std::string> {
-    void operator()(msgpack::object& o, const std::string& v) const {
+struct object<eastl::string> {
+    void operator()(msgpack::object& o, const eastl::string& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.type = msgpack::type::STR;
         o.via.str.ptr = v.data();
@@ -65,8 +65,8 @@ struct object<std::string> {
 };
 
 template <>
-struct object_with_zone<std::string> {
-    void operator()(msgpack::object::with_zone& o, const std::string& v) const {
+struct object_with_zone<eastl::string> {
+    void operator()(msgpack::object::with_zone& o, const eastl::string& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.type = msgpack::type::STR;
         char* ptr = static_cast<char*>(o.zone.allocate_align(size, MSGPACK_ZONE_ALIGNOF(char)));

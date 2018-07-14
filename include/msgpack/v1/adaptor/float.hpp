@@ -12,7 +12,7 @@
 
 #include "msgpack/versioning.hpp"
 #include "msgpack/object_fwd.hpp"
-#include <vector>
+#include <eastl/vector.h>
 
 namespace msgpack {
 
@@ -37,7 +37,7 @@ struct convert<float> {
             v = static_cast<float>(o.via.i64);
         }
         else {
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
         }
         return o;
     }
@@ -66,7 +66,7 @@ struct convert<double> {
             v = static_cast<double>(o.via.i64);
         }
         else {
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
         }
         return o;
     }

@@ -13,7 +13,6 @@
 #include "msgpack/v1/fbuffer_decl.hpp"
 
 #include <cstdio>
-#include <stdexcept>
 
 namespace msgpack {
 

@@ -27,17 +27,17 @@ MSGPACK_API_VERSION_NAMESPACE(v1) {
 namespace adaptor {
 
 template <>
-struct convert<std::string_view> {
-    msgpack::object const& operator()(msgpack::object const& o, std::string_view& v) const {
+struct convert<eastl::string_view> {
+    msgpack::object const& operator()(msgpack::object const& o, eastl::string_view& v) const {
         switch (o.type) {
         case msgpack::type::BIN:
-            v = std::string_view(o.via.bin.ptr, o.via.bin.size);
+            v = eastl::string_view(o.via.bin.ptr, o.via.bin.size);
             break;
         case msgpack::type::STR:
-            v = std::string_view(o.via.str.ptr, o.via.str.size);
+            v = eastl::string_view(o.via.str.ptr, o.via.str.size);
             break;
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
             break;
         }
         return o;
@@ -45,9 +45,9 @@ struct convert<std::string_view> {
 };
 
 template <>
-struct pack<std::string_view> {
+struct pack<eastl::string_view> {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const std::string_view& v) const {
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, const eastl::string_view& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.pack_str(size);
         o.pack_str_body(v.data(), size);
@@ -56,8 +56,8 @@ struct pack<std::string_view> {
 };
 
 template <>
-struct object<std::string_view> {
-    void operator()(msgpack::object& o, const std::string_view& v) const {
+struct object<eastl::string_view> {
+    void operator()(msgpack::object& o, const eastl::string_view& v) const {
         uint32_t size = checked_get_container_size(v.size());
         o.type = msgpack::type::STR;
         o.via.str.ptr = v.data();
@@ -66,8 +66,8 @@ struct object<std::string_view> {
 };
 
 template <>
-struct object_with_zone<std::string_view> {
-    void operator()(msgpack::object::with_zone& o, const std::string_view& v) const {
+struct object_with_zone<eastl::string_view> {
+    void operator()(msgpack::object::with_zone& o, const eastl::string_view& v) const {
         static_cast<msgpack::object&>(o) << v;
     }
 };

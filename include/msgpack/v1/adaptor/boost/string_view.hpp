@@ -38,7 +38,7 @@ struct convert<boost::string_view> {
             v = boost::string_view(o.via.str.ptr, o.via.str.size);
             break;
         default:
-            throw msgpack::type_error();
+            ExRaiseStatus(EMSGPACK_TYPE_ERROR);
             break;
         }
         return o;
